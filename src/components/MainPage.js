@@ -1,13 +1,21 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+const getQuotes = () => fetch("/quotes");
 const MainPage = () => {
+  const [quotes, setQuotes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    getQuotes()
+      .then((res) => res.json())
+      .then((data) => setQuotes(data))
+      .finally(() => setIsLoading(false));
+  }, []);
   return (
     <>
-      <h1 role="heading">simpson quotes</h1>;
+      <h1 role="heading">simpson quotes</h1>;{isLoading && <p>Loading...</p>}
       <ul>
-        <li>Gah, stupid sexy Flanders!</li>
-        <li>Eat my shorts</li>
-        <li>Shut up, brain. I got friends now. I don't need you anymore</li>
+        {quotes.map(({ quote }) => (
+          <li key={quote}>{quote}</li>
+        ))}
       </ul>
     </>
   );
